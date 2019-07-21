@@ -1,0 +1,67 @@
+extends:
+  # to display prettier warnings - see rule `prettier`
+  - tslint-plugin-prettier
+  # @see https://github.com/progre/tslint-config-airbnb/blob/master/tslint.js
+  - tslint-config-airbnb
+  # to prevent TSLint and Prettier conflicts
+  # @see https://github.com/prettier/tslint-config-prettier
+  - tslint-config-prettier
+lintersOptions:
+  exclude:
+    - build
+    - config
+    - public
+    - scripts
+    - webpack
+rules:
+  # displays issues that can be handled by calling prettier
+  prettier:
+    severity: warning
+  # disabled because our import naming conventions are different
+  import-name: false
+  # to enforce camelCase variable naming convention, but we need to
+  # name React Function Components with PascalCase
+  # @see https://github.com/palantir/tslint-react/issues/120
+  variable-name:
+    severity: error
+    options:
+      - ban-keywords
+      - check-format
+      - allow-pascal-case
+  # listed console methods in `options` will marked as warning
+  # f.e. calling console.error is allowed
+  # @see https://palantir.github.io/tslint/rules/no-console/
+  no-console:
+    severity: warning
+    options:
+      - debug
+      - log
+      - time
+      - timeEnd
+      - trace
+  # @see https://palantir.github.io/tslint/rules/no-unsafe-finally/
+  no-unsafe-finally: true
+  # display warning when we use an identified marked as deprecated with JSDoc annotation
+  # @see https://palantir.github.io/tslint/rules/deprecation/
+  deprecation:
+    severity: warning
+  # enforce UTF-8 file encoding
+  encoding: true
+  # enforce file naming convention
+  file-name-casing:
+    severity: error
+    options:
+      index.tsx: camel-case
+      # edge-case: to allow test helper methods
+      render(.*).tsx: camel-case
+      .(unit|integration).tsx: camel-case
+      .tsx: pascal-case
+      \d+\-.*.ts: kebab-case
+      .ts: camel-case
+  # to differentiate Interfaces and Classes by prefix `I`
+  interface-name:
+    severity: error
+    options:
+      - always-prefix
+  # enforce newline before return statement for better readibility
+  newline-before-return: true
