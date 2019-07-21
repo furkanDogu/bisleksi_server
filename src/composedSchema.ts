@@ -3,10 +3,10 @@ import { makeExecutableSchema, IResolvers } from "graphql-tools";
 import { gql } from "apollo-server";
 
 // QUERIES
-import userQueries from "./graphql_types/user/queries";
+import userQueries from "./queries/user";
 
 // TYPES
-import User from "./graphql_types/user/schema";
+import User from "./schemas/user";
 
 const Root = gql`
   type Query {
