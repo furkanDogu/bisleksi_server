@@ -1,6 +1,10 @@
 import { ApolloServer } from "apollo-server";
 import schema from "./src/composedSchema";
 
+import initMongo from "./src/utils/mongoDB";
+
+initMongo();
+
 const server = new ApolloServer({
   schema,
   playground: true

@@ -1,4 +1,4 @@
-const levels = [{ id: "1", level: 5 }];
+const levels = [{ game_id: "1", level: 5 }];
 const usersArr = [
   {
     id: "123",

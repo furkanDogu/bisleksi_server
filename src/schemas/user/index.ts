@@ -6,7 +6,7 @@ const User = gql`
   }
 
   type User {
-    _id: ID!
+    id: ID!
     name: String!
     surname: String!
     email: String!
