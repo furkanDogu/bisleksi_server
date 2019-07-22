@@ -1,7 +1,7 @@
 import { gql } from "apollo-server";
 const User = gql`
   type GameLevel {
-    id: ID!
+    game_id: ID!
     level: Int!
   }
 
