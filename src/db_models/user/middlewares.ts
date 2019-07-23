@@ -17,8 +17,10 @@ export default (schema: mongoose.Schema<any>) => {
     try {
       // @ts-ignore
       this.password = await bcrypt.hash(this.password, hashSeed);
-    } catch (e) {
-      throw new Error(JSON.stringify(HashingErr()));
+    } catch (errItself) {
+      throw new Error(
+        HashingErr({ from: "db_models:user:middlewares", errItself })
+      );
     }
   });
 };

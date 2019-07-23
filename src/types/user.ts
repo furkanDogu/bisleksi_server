@@ -6,3 +6,8 @@ export type TRegisterUserParams = {
   profileName: string;
   birthday: Date;
 };
+
+export type TLoginUserParams = {
+  email: string;
+  password: string;
+};
