@@ -3,10 +3,13 @@ import { makeExecutableSchema, IResolvers } from "graphql-tools";
 import { gql } from "apollo-server";
 
 // QUERIES
-import userQueries from "./queries/user";
+import userQueries from "@queries/user";
 
 // TYPES
-import User from "./schemas/user";
+import User from "@schemas/user";
+
+// MUTATIONS
+import userMutations from "@mutation/user/session";
 
 const Root = gql`
   type Query {
@@ -25,7 +28,7 @@ const Root = gql`
   }
 `;
 
-const resolvers: IResolvers = merge({}, userQueries);
+const resolvers: IResolvers = merge({}, userQueries, userMutations);
 const schema = makeExecutableSchema({
   typeDefs: [Root, User],
   resolvers

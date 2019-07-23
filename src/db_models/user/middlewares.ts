@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-import { hashSeed } from "../../../app_config.json";
-import { HashingError } from "../../errors/userErrors";
+import { hashSeed } from "@appConfig";
+import { HashingErr } from "@errors/userErrors";
 
 // middlewares async because we don't want to call next() function explicitely
 export default (schema: mongoose.Schema<any>) => {
@@ -18,9 +18,7 @@ export default (schema: mongoose.Schema<any>) => {
       // @ts-ignore
       this.password = await bcrypt.hash(this.password, hashSeed);
     } catch (e) {
-      const formedError = HashingError();
-      console.error(formedError, e);
-      throw new Error(formedError.msg);
+      throw new Error(JSON.stringify(HashingErr()));
     }
   });
 };

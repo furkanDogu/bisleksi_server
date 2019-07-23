@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-import { mongoURL } from "../../app_config.json";
-import { connError } from "./../errors/dbErrors";
+import { mongoURL } from "@appConfig";
+import { connError } from "@errors/dbErrors";
 
 const initMongo = () => {
   mongoose.connect(mongoURL, {

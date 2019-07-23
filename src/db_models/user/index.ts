@@ -33,11 +33,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     maxLength: 15
   },
-  birtday: {
+  birthday: {
     type: Date,
     required: true,
     validate: {
-      validator: (birtday: Date | string) => isBirthDayValid(birtday)
+      validator: (birthday: Date | string) => isBirthDayValid(birthday)
     }
   },
   levels: [

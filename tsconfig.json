@@ -1,8 +1,19 @@
 {
   "include": ["src"],
   "exclude": ["build", "node_modules"],
-
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@appTypes/*": ["src/types/*"],
+      "@errors/*": ["src/errors/*"],
+      "@db_modules/*": ["src/db_models/*"],
+      "@mutation/*": ["src/mutations/*"],
+      "@queries/*": ["src/queries/*"],
+      "@schemas/*": ["src/schemas/*"],
+      "@subscriptions/*": ["src/subscriptions/*"],
+      "@utils/*": ["src/utils/*"],
+      "@appConfig": ["app_config.json"]
+    },
     "incremental": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

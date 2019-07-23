@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
+  "_moduleAliases": {
+    "@appTypes": "src/types",
+    "@errors": "src/errors",
+    "@db_modules": "src/db_models",
+    "@mutation": "src/mutations",
+    "@queries": "src/queries",
+    "@schemas": "src/schemas",
+    "@subscriptions": "src/subscriptions",
+    "@utils": "src/utils",
+    "@appConfig": "app_config.json"
+  },
   "scripts": {
     "start": "nodemon --exec ts-node index.ts"
   },
@@ -28,6 +39,7 @@
     "express": "^4.17.1",
     "graphql": "^14.4.2",
     "lodash": "^4.17.15",
+    "module-alias": "^2.2.0",
     "mongoose": "^5.6.5",
     "yup": "^0.27.0"
   }

@@ -1,4 +1,4 @@
-import { TError } from "../types/error";
+import { TError } from "@appTypes/error";
 
 export const connError = (): TError => ({
   statusCode: 503,
