@@ -1,37 +1,60 @@
-import { TRegisterUserParams } from "@appTypes/user";
-import User from "@db_modules/user";
-import { ExistingEmail } from "@errors/userErrors";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-export const register = async (_: Object, args: TRegisterUserParams) => {
-  const { name, surname, email, password, profileName, birthday } = args;
+import User from "@db_modules/user";
+import { TRegisterUserParams, TLoginUserParams } from "@appTypes/user";
+import { ExistingEmail, LoginError } from "@errors/userErrors";
+import { initLevels } from "@utils/generators";
+import { JWT_SECRET } from "@appConfig";
+
+export const register = async (
+  _: Object,
+  { name, surname, email, password, profileName, birthday }: TRegisterUserParams
+) => {
   const user = await User.findOne({ email }, null, { lean: true }).exec();
 
-  if (user) throw new Error(JSON.stringify(ExistingEmail()));
+  if (user) throw new Error(ExistingEmail({ from: "mutations:user:session" }));
 
-  // generate levels and add to the create function
-  User.create({
+  const userDoc = await User.create({
     name,
     surname,
     email,
     password,
     profileName,
-    birthday
+    birthday,
+    levels: initLevels()
   });
 
-  // temporary
+  const newUser = userDoc.toObject();
+  delete newUser.password;
+
   return {
-    id: "1",
-    name: "furkan",
-    surname: "dogu",
-    email: "furkandogu@gmail.com",
-    password: "123",
-    profileName: "Furkan35",
-    birthday: "2019-06-04"
+    token: jwt.sign(newUser, JWT_SECRET)
+  };
+};
+
+export const login = async (
+  _: Object,
+  { email, password }: TLoginUserParams
+) => {
+  const userDoc = await User.findOne({ email });
+  if (!userDoc) throw new Error(LoginError({ from: "mutations:user:session" }));
+
+  const user = userDoc.toObject();
+  const isValid = await bcrypt.compare(password, user.password);
+
+  if (!isValid) throw new Error(LoginError({ from: "mutations:user:session" }));
+
+  delete user.password;
+
+  return {
+    token: jwt.sign(user, JWT_SECRET)
   };
 };
 
 export default {
   Mutation: {
-    register
+    register,
+    login
   }
 };

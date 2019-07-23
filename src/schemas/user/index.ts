@@ -1,7 +1,11 @@
 import { gql } from "apollo-server";
 const User = gql`
+  type AuthRes {
+    token: String!
+  }
+
   type GameLevel {
-    game_id: ID!
+    gameId: ID!
     level: Int!
   }
 
@@ -30,7 +34,8 @@ const User = gql`
       password: String!
       profileName: String!
       birthday: String!
-    ): User!
+    ): AuthRes
+    login(email: String!, password: String!): AuthRes
   }
 `;
 
