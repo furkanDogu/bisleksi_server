@@ -1,9 +1,5 @@
 import { gql } from "apollo-server";
-const User = gql`
-  type AuthRes {
-    token: String!
-  }
-
+export const User = gql`
   type GameLevel {
     gameId: ID!
     level: Int!
@@ -14,7 +10,6 @@ const User = gql`
     name: String!
     surname: String!
     email: String!
-    password: String!
     profileName: String!
     birthday: String!
     levels: [GameLevel!]!
@@ -34,9 +29,7 @@ const User = gql`
       password: String!
       profileName: String!
       birthday: String!
-    ): AuthRes
-    login(email: String!, password: String!): AuthRes
+    ): String
+    login(email: String!, password: String!): String
   }
 `;
-
-export default User;
