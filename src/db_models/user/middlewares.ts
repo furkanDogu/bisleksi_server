@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { hashSeed } from "@appConfig";
 import { HashingErr } from "@errors/userErrors";
 
-// middlewares async because we don't want to call next() function explicitely
+// middlewares are async because we don't want to call next() function explicitly
 export default (schema: mongoose.Schema<any>) => {
   // Set the creation time of user
   schema.pre("save", async function() {
