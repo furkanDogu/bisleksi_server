@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
+  "_moduleAliases": {
+    "@appTypes": "src/types",
+    "@errors": "src/errors",
+    "@db_modules": "src/db_models",
+    "@mutation": "src/mutations/index.ts",
+    "@queries": "src/queries/index.ts",
+    "@schemas": "src/schemas",
+    "@subscriptions": "src/subscriptions",
+    "@utils": "src/utils",
+    "@appConfig": "app_config.json"
+  },
   "scripts": {
     "start": "nodemon --exec ts-node index.ts"
   },
@@ -21,13 +32,16 @@
   },
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/jsonwebtoken": "^8.3.2",
     "@types/mongoose": "^5.5.9",
     "@types/yup": "^0.26.22",
     "apollo-server": "^2.7.0",
     "bcrypt": "^3.0.6",
     "express": "^4.17.1",
     "graphql": "^14.4.2",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "module-alias": "^2.2.0",
     "mongoose": "^5.6.5",
     "yup": "^0.27.0"
   }

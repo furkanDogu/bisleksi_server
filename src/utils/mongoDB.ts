@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-import { mongoURL } from "../../app_config.json";
-import { connError } from "./../errors/dbErrors";
+import { mongoURL } from "@appConfig";
+import { connError } from "@errors/dbErrors";
 
 const initMongo = () => {
   mongoose.connect(mongoURL, {
@@ -11,10 +11,8 @@ const initMongo = () => {
     console.log("Connected to mongoDB");
   });
 
-  mongoose.connection.on("error", error => {
-    const formedError = connError();
-    console.error(formedError, error);
-    throw new Error(formedError.msg);
+  mongoose.connection.on("error", errItself => {
+    throw new Error(connError({ from: "utils:mongoDB", errItself }));
   });
 };
 

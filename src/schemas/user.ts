@@ -1,7 +1,7 @@
 import { gql } from "apollo-server";
-const User = gql`
+export const User = gql`
   type GameLevel {
-    game_id: ID!
+    gameId: ID!
     level: Int!
   }
 
@@ -10,16 +10,26 @@ const User = gql`
     name: String!
     surname: String!
     email: String!
-    password: String!
     profileName: String!
     birthday: String!
     levels: [GameLevel!]!
+    createdAt: String!
   }
 
   extend type Query {
     sayHi(name: String!): String!
     users: [User!]!
   }
-`;
 
-export default User;
+  extend type Mutation {
+    register(
+      name: String!
+      surname: String!
+      email: String!
+      password: String!
+      profileName: String!
+      birthday: String!
+    ): String
+    login(email: String!, password: String!): String
+  }
+`;

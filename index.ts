@@ -1,3 +1,4 @@
+import "module-alias/register";
 import { ApolloServer } from "apollo-server";
 import schema from "./src/composedSchema";
 

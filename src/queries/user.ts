@@ -15,9 +15,7 @@ const usersArr = [
 const sayHi = (_: Object, args: any): string => `Hi ${args.name}`;
 const users = () => usersArr;
 
-export default {
-  Query: {
-    sayHi,
-    users
-  }
+export const userQueries = {
+  sayHi,
+  users
 };

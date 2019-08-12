@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
     maxlength: 255,
     unique: true,
     validate: {
-      validator: (email: string) => isEmailValid(email)
+      isAsync: true,
+      validator: async (email: string) => await isEmailValid(email)
     }
   },
   password: {
@@ -33,11 +34,13 @@ const userSchema = new mongoose.Schema({
     required: true,
     maxLength: 15
   },
-  birtday: {
+  birthday: {
     type: Date,
     required: true,
     validate: {
-      validator: (birtday: Date | string) => isBirthDayValid(birtday)
+      isAsync: true,
+      validator: async (birthday: Date | string) =>
+        await isBirthDayValid(birthday)
     }
   },
   levels: [

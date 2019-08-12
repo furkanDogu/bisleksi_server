@@ -1,7 +1,10 @@
-import { TError } from "../types/error";
+import { TErrorFuncParams } from "@appTypes/error";
 
-export const connError = (): TError => ({
-  statusCode: 503,
-  name: "Database Service Unavailable",
-  msg: "Couldn't connect to the database"
-});
+export const connError = ({ from, errItself }: TErrorFuncParams) =>
+  JSON.stringify({
+    statusCode: 503,
+    name: "Database Service Unavailable",
+    msg: "Couldn't connect to the database",
+    from,
+    errItself
+  });

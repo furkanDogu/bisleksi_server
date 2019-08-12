@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-import { hashSeed } from "../../../app_config.json";
-import { HashingError } from "../../errors/userErrors";
+import { hashSeed } from "@appConfig";
+import { HashingErr } from "@errors/userErrors";
 
-// middlewares async because we don't want to call next() function explicitely
+// middlewares are async because we don't want to call next() function explicitly
 export default (schema: mongoose.Schema<any>) => {
   // Set the creation time of user
   schema.pre("save", async function() {
@@ -17,10 +17,10 @@ export default (schema: mongoose.Schema<any>) => {
     try {
       // @ts-ignore
       this.password = await bcrypt.hash(this.password, hashSeed);
-    } catch (e) {
-      const formedError = HashingError();
-      console.error(formedError, e);
-      throw new Error(formedError.msg);
+    } catch (errItself) {
+      throw new Error(
+        HashingErr({ from: "db_models:user:middlewares", errItself })
+      );
     }
   });
 };
