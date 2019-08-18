@@ -8,3 +8,12 @@ export const connError = ({ from, errItself }: TErrorFuncParams) =>
     from,
     errItself
   });
+
+export const HashingErr = ({ from, errItself }: TErrorFuncParams) =>
+  JSON.stringify({
+    statusCode: 400,
+    name: "Hashing Error",
+    msg: "An error occured while hashing the password",
+    from,
+    errItself
+  });

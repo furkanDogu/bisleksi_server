@@ -1,14 +1,16 @@
 import "module-alias/register";
 import { ApolloServer } from "apollo-server";
-import schema from "./src/composedSchema";
 
-import initMongo from "./src/utils/mongoDB";
+import env from "./src/appConfig";
+
+import schema from "./src/graphql/composedSchema";
+import initMongo from "./src/database/mongoDB";
 
 initMongo();
 
 const server = new ApolloServer({
   schema,
-  playground: true
+  playground: Boolean(env.has_playground)
 });
 
 server.listen({ port: 5060 }).then(({ url }: { url: string }) => {

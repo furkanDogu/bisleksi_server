@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 
-import { mongoURL } from "@appConfig";
+import env from "@appConfig";
+
 import { connError } from "@errors/dbErrors";
 
-const initMongo = () => {
-  mongoose.connect(mongoURL, {
+export default () => {
+  console.log(env.mongo_url);
+  mongoose.connect(env.mongo_url!, {
     useNewUrlParser: true
   });
   mongoose.connection.on("open", () => {
@@ -15,5 +17,3 @@ const initMongo = () => {
     throw new Error(connError({ from: "utils:mongoDB", errItself }));
   });
 };
-
-export default initMongo;

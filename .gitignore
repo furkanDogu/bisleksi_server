@@ -1,3 +1,4 @@
 node_modules
 .vscode
-app_config.json
+appConfig.ts
+.env
