@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
     maxlength: 255,
     unique: true,
     validate: {
-      isAsync: true,
       validator: async (email: string) => await isEmailValid(email)
     }
   },
@@ -38,20 +37,27 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: true,
     validate: {
-      isAsync: true,
       validator: async (birthday: Date | string) =>
         await isBirthDayValid(birthday)
     }
   },
   levels: [
     {
-      gameId: { type: Number, required: true },
+      gameId: { type: String, required: true },
       level: { type: Number, required: true }
     }
   ],
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  resetPasswordToken: {
+    type: String,
+    default: null
+  },
+  resetTokenExpires: {
+    type: Date,
+    default: null
   }
 });
 

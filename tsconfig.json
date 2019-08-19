@@ -4,10 +4,9 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@services/*": ["src/services/*"],
       "@appTypes/*": ["src/types/*"],
-      "@errors/*": ["src/services/errors/*"],
       "@models/*": ["src/database/models/*"],
-      "@services": ["src/services/*"],
       "@mutation/*": ["src/graphql/mutations/index.ts"],
       "@queries/*": ["src/graphql/queries/index.ts"],
       "@schemas/*": ["src/graphql/schemas/index.ts"],

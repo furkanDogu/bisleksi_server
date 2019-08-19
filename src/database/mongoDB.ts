@@ -2,11 +2,10 @@ import mongoose from "mongoose";
 
 import env from "@appConfig";
 
-import { connError } from "@errors/dbErrors";
+import { connError } from "@services/errorService/dbErrors";
 
 export default () => {
-  console.log(env.mongo_url);
-  mongoose.connect(env.mongo_url!, {
+  mongoose.connect(env.mongo_url, {
     useNewUrlParser: true
   });
   mongoose.connection.on("open", () => {

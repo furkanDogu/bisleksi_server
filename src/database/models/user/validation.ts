@@ -1,11 +1,10 @@
 import * as yup from "yup";
 
-export const isEmailValid = async (email: string) => {
+export const isEmailValid = async (email: string) =>
   yup
     .string()
     .email()
     .isValid(email);
-};
 
 // ex: In 2019, the given birthday max should be 01.01.2012
 const maxYear = new Date().getFullYear() - 7;

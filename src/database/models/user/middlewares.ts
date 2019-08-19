@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-import { HashingErr } from "@errors/dbErrors";
+import { HashingErr } from "@services/errorService/dbErrors";
 
 // middlewares are async because we don't want to call next() function explicitly
 export default (schema: mongoose.Schema<any>) => {
