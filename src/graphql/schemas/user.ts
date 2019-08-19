@@ -1,4 +1,5 @@
 import { gql } from "apollo-server";
+
 export const User = gql`
   type GameLevel {
     gameId: ID!
@@ -6,7 +7,7 @@ export const User = gql`
   }
 
   type User {
-    id: ID!
+    _id: ID!
     name: String!
     surname: String!
     email: String!
@@ -14,6 +15,8 @@ export const User = gql`
     birthday: String!
     levels: [GameLevel!]!
     createdAt: String!
+    resetPasswordToken: String
+    resetTokenExpires: String
   }
 
   extend type Query {
@@ -31,5 +34,8 @@ export const User = gql`
       birthday: String!
     ): String
     login(email: String!, password: String!): String
+    sendResetEmail(email: String!): Boolean
+    validateResetCode(code: String!): String
+    updatePassword(safetyToken: String!, newPassword: String!): Boolean
   }
 `;

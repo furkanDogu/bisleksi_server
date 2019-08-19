@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-import { hashSeed } from "@appConfig";
-import { HashingErr } from "@errors/userErrors";
+import { HashingErr } from "@services/errorService/dbErrors";
 
 // middlewares are async because we don't want to call next() function explicitly
 export default (schema: mongoose.Schema<any>) => {
@@ -16,7 +15,7 @@ export default (schema: mongoose.Schema<any>) => {
   schema.pre("save", async function() {
     try {
       // @ts-ignore
-      this.password = await bcrypt.hash(this.password, hashSeed);
+      this.password = await bcrypt.hash(this.password, 11);
     } catch (errItself) {
       throw new Error(
         HashingErr({ from: "db_models:user:middlewares", errItself })

@@ -5,7 +5,7 @@ import {
 } from "@appTypes/common";
 
 export const generateLevels = () => {
-  return [{ gameId: 1, level: 1 }, { gameId: 2, level: 1 }];
+  return [{ gameId: `1`, level: 1 }, { gameId: `2`, level: 1 }];
 };
 
 export const generateComposedResolverObj = (

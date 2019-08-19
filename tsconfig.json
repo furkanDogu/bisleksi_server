@@ -4,15 +4,15 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@services/*": ["src/services/*"],
       "@appTypes/*": ["src/types/*"],
-      "@errors/*": ["src/errors/*"],
-      "@db_modules/*": ["src/db_models/*"],
-      "@mutation/*": ["src/mutations/index.ts"],
-      "@queries/*": ["src/queries/index.ts"],
-      "@schemas/*": ["src/schemas/*"],
-      "@subscriptions/*": ["src/subscriptions/*"],
+      "@models/*": ["src/database/models/*"],
+      "@mutation/*": ["src/graphql/mutations/index.ts"],
+      "@queries/*": ["src/graphql/queries/index.ts"],
+      "@schemas/*": ["src/graphql/schemas/index.ts"],
+      "@subscriptions/*": ["src/graphql/subscriptions/*"],
       "@utils/*": ["src/utils/*"],
-      "@appConfig": ["app_config.json"]
+      "@appConfig": ["src/appConfig.ts"]
     },
     "incremental": true,
     "esModuleInterop": true,

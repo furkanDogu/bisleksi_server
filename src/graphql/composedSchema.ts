@@ -2,7 +2,7 @@
 import { userQueries } from "@queries/";
 
 // TYPES
-import { User } from "@schemas/index";
+import { User } from "@schemas/";
 
 // MUTATIONS
 import { userMutations } from "@mutation/";
@@ -38,8 +38,6 @@ const resolvers: IResolvers = {
     userMutations
   })
 };
-
-console.log(resolvers);
 
 const schema = makeExecutableSchema({
   typeDefs: [Root, User],
