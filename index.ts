@@ -10,9 +10,12 @@ initMongo();
 
 const server = new ApolloServer({
   schema,
-  playground: Boolean(env.has_playground)
+  playground: Boolean(env.has_playground),
+  context: request => ({
+    ...request
+  })
 });
 
-server.listen({ port: 5060 }).then(({ url }: { url: string }) => {
+server.listen({ port: 4000 }).then(({ url }: { url: string }) => {
   console.log(`🚀  Server ready at ${url}`);
 });
