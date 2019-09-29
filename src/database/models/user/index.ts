@@ -41,10 +41,10 @@ const userSchema = new mongoose.Schema({
         await isBirthDayValid(birthday)
     }
   },
-  levels: [
+  gameInfo: [
     {
       gameId: { type: String, required: true },
-      level: { type: Number, required: true }
+      score: { type: Number, required: true }
     }
   ],
   createdAt: {

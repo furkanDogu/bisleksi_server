@@ -21,8 +21,6 @@ import {
 } from "@appTypes/user";
 import User from "@models/user";
 
-// TODO: write at least one line comments for all user mutations dl: 20/08
-
 const register = async (
   _: IUser,
   { name, surname, email, password, profileName, birthday }: IRegisterUser
