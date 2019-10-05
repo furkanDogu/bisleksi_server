@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { InvalidToken } from "@services/errorService/userErrors";
+import { throwError } from "@services/errorService";
 
 import env from "@appConfig";
 
@@ -8,9 +8,12 @@ import env from "@appConfig";
 export const isTokenValid = ({ req }: any) => {
   const { auth_token } = req.headers;
 
-  if (auth_token) {
-    return jwt.verify(auth_token, env.jwt_secret);
+  if (!auth_token) {
+    return throwError({
+      from: "services:authService:isTokenValid",
+      msg: "Token is invalid"
+    });
   }
 
-  throw new Error(InvalidToken({ from: "services:authService:isTokenValid" }));
+  return jwt.verify(auth_token, env.jwt_secret);
 };

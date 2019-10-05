@@ -1,3 +1,7 @@
+import { Schema, Document } from "mongoose";
+
+import { IGame } from "./game";
+
 export interface IRegisterUser {
   name: string;
   surname: string;
@@ -8,8 +12,8 @@ export interface IRegisterUser {
 }
 
 export interface ILoginUser {
-  email: string;
-  password: string;
+  email: IUser["email"];
+  password: IUser["password"];
 }
 
 export interface IValidateResetCode {
@@ -21,9 +25,9 @@ export interface IUpdatePassword {
   newPassword: string;
 }
 
-export interface IUser extends IRegisterUser {
-  _id: string;
-  levels: { gameId: string; level: number }[];
+export interface IUser extends IRegisterUser, Document {
+  gameInfo: { game: IGame["_id"]; score: number }[];
+  createdAt: Date;
   resetPasswordToken?: string;
   resetTokenExpires?: string;
 }

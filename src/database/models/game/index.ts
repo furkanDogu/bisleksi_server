@@ -1,17 +1,20 @@
 import mongoose from "mongoose";
 
+import { IGame } from "@appTypes/game";
+
 const gameSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     maxlength: 50
   },
-  assetURLs: [
-    {
-      assetName: { type: String, required: true },
-      URL: { type: String, required: true }
-    }
+  assets: [
+    new mongoose.Schema({
+      assetTag: { type: String, required: true },
+      URL: { type: String, required: true },
+      isActive: { type: Boolean, required: true }
+    })
   ]
 });
 
-export default mongoose.model("Game", gameSchema);
+export const Game = mongoose.model<IGame>("Game", gameSchema);

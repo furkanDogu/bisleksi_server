@@ -9,7 +9,6 @@ export default {
       user: env.email,
       pass: env.password
     };
-    // TODO: Find a better mail template dl: 25/08
     const mailOptions = {
       from: auth.user,
       to: user.email,

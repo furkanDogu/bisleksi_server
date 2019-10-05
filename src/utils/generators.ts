@@ -1,11 +1,13 @@
+import { Schema } from "mongoose";
+
 import {
   TResolverObject,
   TComposedResolver,
   TResolverKind
 } from "@appTypes/common";
 
-export const generateLevels = () => {
-  return [{ gameId: `1`, level: 1 }, { gameId: `2`, level: 1 }];
+export const generateLevels = (gameIds: [Schema.Types.ObjectId]) => {
+  return gameIds.map(gameId => ({ gameId, level: 1 }));
 };
 
 export const generateComposedResolverObj = (

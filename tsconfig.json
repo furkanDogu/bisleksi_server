@@ -6,10 +6,10 @@
     "paths": {
       "@services/*": ["src/services/*"],
       "@appTypes/*": ["src/types/*"],
-      "@models/*": ["src/database/models/*"],
-      "@mutation/*": ["src/graphql/mutations/index.ts"],
-      "@queries/*": ["src/graphql/queries/index.ts"],
-      "@schemas/*": ["src/graphql/schemas/index.ts"],
+      "@models": ["src/database/models/index.ts"],
+      "@mutations": ["src/graphql/mutations/index.ts"],
+      "@queries": ["src/graphql/queries/index.ts"],
+      "@schemas": ["src/graphql/schemas/index.ts"],
       "@subscriptions/*": ["src/graphql/subscriptions/*"],
       "@utils/*": ["src/utils/*"],
       "@appConfig": ["src/appConfig.ts"]

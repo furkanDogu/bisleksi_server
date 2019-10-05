@@ -1,15 +1,14 @@
-// QUERIES
-import { userQueries } from "@queries/";
-
-// TYPES
-import { User } from "@schemas/";
-
-// MUTATIONS
-import { userMutations } from "@mutation/";
-
-import { merge } from "lodash";
 import { makeExecutableSchema, IResolvers } from "graphql-tools";
 import { gql } from "apollo-server";
+
+// TYPES
+import { User, Game, Analysis } from "@schemas";
+
+// QUERIES
+import { userQueries } from "@queries";
+
+// MUTATIONS
+import { userMutations, gameMutations, analysisMutations } from "@mutations";
 
 import { generateComposedResolverObj } from "@utils/generators";
 
@@ -35,12 +34,14 @@ const resolvers: IResolvers = {
     userQueries
   }),
   ...generateComposedResolverObj("Mutation", {
-    userMutations
+    userMutations,
+    gameMutations,
+    analysisMutations
   })
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: [Root, User],
+  typeDefs: [Root, User, Game, Analysis],
   resolvers
 });
 
