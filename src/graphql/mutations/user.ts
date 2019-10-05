@@ -29,7 +29,7 @@ export const userMutations = {
       });
 
     const gameInfo = (await Game.find({}).select("_id")).map(game => ({
-      game_id: game._id,
+      gameId: game._id,
       score: 0
     }));
 
