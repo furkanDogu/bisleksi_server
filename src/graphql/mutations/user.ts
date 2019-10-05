@@ -1,17 +1,8 @@
+import bcrypt from "bcrypt";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import _unset from "lodash/unset";
 
-import {
-  ExistingEmail,
-  LoginError,
-  EmailDoesntExists,
-  InvalidResetCode
-} from "@services/errorService/userErrors";
-import { generateLevels } from "@utils/generators";
-import mailService from "@services/mailService";
-
-import env from "@appConfig";
 import {
   IRegisterUser,
   ILoginUser,
@@ -19,110 +10,121 @@ import {
   IUser,
   IValidateResetCode
 } from "@appTypes/user";
-import User from "@models/user";
+import { User, Game } from "@models";
+import env from "@appConfig";
 
-// TODO: write at least one line comments for all user mutations dl: 20/08
-
-const register = async (
-  _: IUser,
-  { name, surname, email, password, profileName, birthday }: IRegisterUser
-) => {
-  const user = await User.findOne({ email }, null, { lean: true }).exec();
-  if (user) throw new Error(ExistingEmail({ from: "mutations:user:register" }));
-
-  const userDoc = await User.create({
-    name,
-    surname,
-    email,
-    password,
-    profileName,
-    birthday,
-    levels: generateLevels()
-  });
-
-  const newUser = userDoc.toObject();
-  delete newUser.password;
-
-  return jwt.sign(newUser, env.jwt_secret);
-};
-
-const login = async (_: IUser, { email, password }: ILoginUser) => {
-  const userDoc = await User.findOne({ email });
-  if (!userDoc) throw new Error(LoginError({ from: "mutations:user:login" }));
-
-  const user = userDoc.toObject();
-
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) throw new Error(LoginError({ from: "mutations:user:login" }));
-
-  delete user.password;
-
-  return jwt.sign(user, env.jwt_secret);
-};
-
-const sendResetEmail = async (_: IUser, { email }: { email: string }) => {
-  const userDoc = await User.findOne({ email });
-  if (!userDoc)
-    throw new Error(
-      EmailDoesntExists({ from: "mutations:user:sendResetEmail" })
-    );
-
-  const code = crypto.randomBytes(3).toString("hex");
-
-  await User.updateOne(userDoc, {
-    resetPasswordToken: code,
-    resetTokenExpires: Date.now() + 3600000
-  });
-
-  await mailService.sendMail(userDoc.toObject(), code);
-  return true;
-};
-
-const validateResetCode = async (_: IUser, { code }: IValidateResetCode) => {
-  const userDoc = await User.findOne({
-    resetPasswordToken: code,
-    resetTokenExpires: { $gt: Date.now() }
-  });
-
-  if (!userDoc)
-    throw new Error(
-      InvalidResetCode({ from: "mutations:user:validateResetCode" })
-    );
-
-  return jwt.sign({ email: userDoc.toObject().email }, env.jwt_secret, {
-    expiresIn: "1h"
-  });
-};
-
-const updatePassword = async (
-  _: IUser,
-  { safetyToken, newPassword }: IUpdatePassword
-) => {
-  const { email } = jwt.verify(safetyToken, env.jwt_secret) as {
-    email: string;
-  };
-
-  const userDoc = await User.findOne({ email });
-  if (!userDoc)
-    throw new Error(
-      EmailDoesntExists({ from: "mutations:user:sendResetEmail" })
-    );
-
-  const password = await bcrypt.hash(newPassword, 11);
-  await User.findOneAndUpdate(
-    {
-      _id: userDoc._id
-    },
-    { $set: { password, resetPasswordToken: null, resetTokenExpires: null } }
-  );
-
-  return true;
-};
+import mailService from "@services/mailService";
+import { throwError } from "@services/errorService";
 
 export const userMutations = {
-  register,
-  login,
-  sendResetEmail,
-  validateResetCode,
-  updatePassword
+  register: async (
+    _: IUser,
+    { name, surname, email, password, profileName, birthday }: IRegisterUser
+  ) => {
+    const anyUser = await User.findOne({ email });
+    if (anyUser)
+      return throwError({
+        from: "mutations:user:register",
+        msg: "Given email already exists"
+      });
+
+    // TODO: initialize game levels
+    const games = await Game.find({}).select("_id");
+
+    const user = (await User.create({
+      name,
+      surname,
+      email,
+      password,
+      profileName,
+      birthday
+    })).toObject();
+
+    _unset(user, "password");
+
+    return jwt.sign(user, env.jwt_secret);
+  },
+
+  login: async (_: IUser, { email, password }: ILoginUser) => {
+    const userDoc = await User.findOne({ email });
+    if (!userDoc)
+      return throwError({
+        from: "mutations:user:login",
+        msg: "Email or password is incorrect "
+      });
+
+    const isValid = await bcrypt.compare(password, userDoc.password);
+    if (!isValid)
+      return throwError({
+        from: "mutations:user:login",
+        msg: "Email or password is incorrect "
+      });
+
+    const user = userDoc.toObject();
+    _unset(user, "password");
+
+    return jwt.sign(user, env.jwt_secret);
+  },
+
+  sendResetEmail: async (_: IUser, { email }: { email: string }) => {
+    const userDoc = await User.findOne({ email });
+    if (!userDoc)
+      return throwError({
+        from: "mutations:user:sendResetEmail",
+        msg: "Email doesn't exists"
+      });
+
+    const code = crypto.randomBytes(3).toString("hex");
+
+    await User.updateOne(userDoc, {
+      resetPasswordToken: code,
+      resetTokenExpires: Date.now() + 3600000
+    });
+
+    await mailService.sendMail(userDoc.toObject(), code);
+    return true;
+  },
+
+  validateResetCode: async (_: IUser, { code }: IValidateResetCode) => {
+    const userDoc = await User.findOne({
+      resetPasswordToken: code,
+      resetTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!userDoc)
+      return throwError({
+        from: "mutations:user:validateResetCode",
+        msg: "Given reset code is invalid"
+      });
+
+    return jwt.sign({ email: userDoc.toObject().email }, env.jwt_secret, {
+      expiresIn: "1h"
+    });
+  },
+
+  updatePassword: async (
+    _: IUser,
+    { safetyToken, newPassword }: IUpdatePassword
+  ) => {
+    const { email } = jwt.verify(safetyToken, env.jwt_secret) as {
+      email: string;
+    };
+
+    const userDoc = await User.findOne({ email });
+    if (!userDoc)
+      return throwError({
+        from: "mutations:user:sendResetEmail",
+        msg: "Email doesn't exists"
+      });
+
+    const password = await bcrypt.hash(newPassword, 11);
+    await User.findOneAndUpdate(
+      {
+        _id: userDoc._id
+      },
+      { $set: { password, resetPasswordToken: null, resetTokenExpires: null } }
+    );
+
+    return true;
+  }
 };

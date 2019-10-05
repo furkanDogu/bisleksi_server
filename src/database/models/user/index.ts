@@ -1,24 +1,30 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 import applyMiddlewares from "./middlewares";
 import { isEmailValid, isBirthDayValid } from "./validation";
+import { IUser } from "@appTypes/user";
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    maxlength: 35
+    maxlength: 35,
+    lowercase: true,
+    trim: true
   },
   surname: {
     type: String,
     required: true,
-    maxlength: 75
+    maxlength: 75,
+    lowercase: true,
+    trim: true
   },
   email: {
     type: String,
     required: true,
     maxlength: 255,
     unique: true,
+    trim: true,
     validate: {
       validator: async (email: string) => await isEmailValid(email)
     }
@@ -31,7 +37,8 @@ const userSchema = new mongoose.Schema({
   profileName: {
     type: String,
     required: true,
-    maxLength: 15
+    maxLength: 15,
+    trim: true
   },
   birthday: {
     type: Date,
@@ -41,11 +48,11 @@ const userSchema = new mongoose.Schema({
         await isBirthDayValid(birthday)
     }
   },
-  levels: [
-    {
-      gameId: { type: String, required: true },
-      level: { type: Number, required: true }
-    }
+  gameInfo: [
+    new Schema({
+      game: { type: Schema.Types.ObjectId, ref: "Game", required: true },
+      score: { type: Number, required: true }
+    })
   ],
   createdAt: {
     type: Date,
@@ -63,4 +70,4 @@ const userSchema = new mongoose.Schema({
 
 applyMiddlewares(userSchema);
 
-export default mongoose.model("User", userSchema);
+export const User = mongoose.model<IUser>("User", userSchema);

@@ -1,5 +1,7 @@
 import { gql } from "apollo-server";
 
+// TODO: fix game level
+
 export const User = gql`
   type GameLevel {
     gameId: ID!
@@ -13,7 +15,7 @@ export const User = gql`
     email: String!
     profileName: String!
     birthday: String!
-    levels: [GameLevel!]!
+    gameInfo: [GameLevel!]!
     createdAt: String!
     resetPasswordToken: String
     resetTokenExpires: String
