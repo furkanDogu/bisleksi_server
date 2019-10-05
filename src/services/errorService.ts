@@ -1,10 +1,10 @@
-import { TErrorFuncParams } from "@appTypes/error";
+import { IErrorFuncParams } from "@appTypes/error";
 
 export const throwError = ({
   from,
   errItself,
   msg
-}: TErrorFuncParams): never => {
+}: IErrorFuncParams): never => {
   throw new Error(
     JSON.stringify({
       msg,
