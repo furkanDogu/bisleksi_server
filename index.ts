@@ -2,7 +2,7 @@ import "module-alias/register";
 import { ApolloServer } from "apollo-server";
 
 import env from "./src/appConfig";
-import schema from "./src/graphql/composedSchema";
+import schema from "./src/graphql";
 import initMongo from "./src/database/mongoDB";
 
 initMongo();

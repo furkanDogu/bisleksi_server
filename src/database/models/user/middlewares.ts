@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-import { throwError } from "@services/errorService";
+import { error } from "@services/errorService";
 
 // middlewares are async because we don't want to call next() function explicitly
 export default (schema: mongoose.Schema<any>) => {
@@ -17,7 +17,7 @@ export default (schema: mongoose.Schema<any>) => {
       // @ts-ignore
       this.password = await bcrypt.hash(this.password, 11);
     } catch (errItself) {
-      return throwError({
+      return error({
         errItself,
         from: "db_models:user:middlewares",
         msg: "An error occured while hashing the password"

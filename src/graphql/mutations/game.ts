@@ -2,13 +2,13 @@ import { Types } from "mongoose";
 
 import { Game } from "@models";
 import { ICreateGame, IAddAsset, IToggleAssetState } from "@appTypes/game";
-import { throwError } from "@services/errorService";
+import { error } from "@services/errorService";
 
 export const gameMutations = {
   createGame: async (_: any, { name }: ICreateGame) => {
     const game = await Game.findOne({ name });
     if (game)
-      return throwError({
+      return error({
         from: "mutations:game:createGame",
         msg: "Given game name is duplicate, please put another name"
       });
@@ -29,7 +29,7 @@ export const gameMutations = {
     );
 
     if (!game)
-      return throwError({
+      return error({
         from: "mutations:game:addAsset",
         msg: "Asset couldn't be added"
       });
@@ -55,7 +55,7 @@ export const gameMutations = {
     );
 
     if (!game)
-      return throwError({
+      return error({
         from: "mutations:game:addAsset",
         msg: "Asset state couldn't be toggled"
       });

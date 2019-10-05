@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import env from "@appConfig";
 
-import { throwError } from "@services/errorService";
+import { error } from "@services/errorService";
 
 export default () => {
   mongoose.connect(env.mongo_url, {
@@ -13,7 +13,7 @@ export default () => {
   });
 
   mongoose.connection.on("error", errItself => {
-    return throwError({
+    return error({
       errItself,
       from: "utils:mongoDB",
       msg: "Couldn't connect to the database"

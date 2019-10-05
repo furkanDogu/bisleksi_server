@@ -14,7 +14,7 @@ import { User, Game } from "@models";
 import env from "@appConfig";
 
 import mailService from "@services/mailService";
-import { throwError } from "@services/errorService";
+import { error } from "@services/errorService";
 
 export const userMutations = {
   register: async (
@@ -23,7 +23,7 @@ export const userMutations = {
   ) => {
     const anyUser = await User.findOne({ email });
     if (anyUser)
-      return throwError({
+      return error({
         from: "mutations:user:register",
         msg: "Given email already exists"
       });
@@ -51,14 +51,14 @@ export const userMutations = {
   login: async (_: IUser, { email, password }: ILoginUser) => {
     const userDoc = await User.findOne({ email });
     if (!userDoc)
-      return throwError({
+      return error({
         from: "mutations:user:login",
         msg: "Email or password is incorrect "
       });
 
     const isValid = await bcrypt.compare(password, userDoc.password);
     if (!isValid)
-      return throwError({
+      return error({
         from: "mutations:user:login",
         msg: "Email or password is incorrect "
       });
@@ -72,7 +72,7 @@ export const userMutations = {
   sendResetEmail: async (_: IUser, { email }: { email: string }) => {
     const userDoc = await User.findOne({ email });
     if (!userDoc)
-      return throwError({
+      return error({
         from: "mutations:user:sendResetEmail",
         msg: "Email doesn't exists"
       });
@@ -95,7 +95,7 @@ export const userMutations = {
     });
 
     if (!userDoc)
-      return throwError({
+      return error({
         from: "mutations:user:validateResetCode",
         msg: "Given reset code is invalid"
       });
@@ -115,7 +115,7 @@ export const userMutations = {
 
     const userDoc = await User.findOne({ email });
     if (!userDoc)
-      return throwError({
+      return error({
         from: "mutations:user:sendResetEmail",
         msg: "Email doesn't exists"
       });

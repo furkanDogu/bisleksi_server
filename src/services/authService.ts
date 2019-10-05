@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { throwError } from "@services/errorService";
+import { error } from "@services/errorService";
 
 import env from "@appConfig";
 
@@ -9,7 +9,7 @@ export const isTokenValid = ({ req }: any) => {
   const { auth_token } = req.headers;
 
   if (!auth_token) {
-    return throwError({
+    return error({
       from: "services:authService:isTokenValid",
       msg: "Token is invalid"
     });
