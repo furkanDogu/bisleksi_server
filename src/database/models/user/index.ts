@@ -54,6 +54,7 @@ const userSchema = new mongoose.Schema({
       score: { type: Number, required: true }
     })
   ],
+  role: { type: String, default: "user" },
   createdAt: {
     type: Date,
     default: Date.now

@@ -1,11 +1,20 @@
+import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 import { Types } from "mongoose";
 
 import { Game } from "@models";
 import { ICreateGame, IAddAsset, IToggleAssetState } from "@appTypes/game";
+
 import { error } from "@services/errorService";
+import { minRole } from "@services/authService";
 
 export const gameMutations = {
-  createGame: async (_: any, { name }: ICreateGame) => {
+  createGame: async (
+    _: any,
+    { name }: ICreateGame,
+    context: ExpressContext
+  ) => {
+    minRole(context, "admin");
+
     const game = await Game.findOne({ name });
     if (game)
       return error({
@@ -19,7 +28,13 @@ export const gameMutations = {
     });
   },
 
-  addAsset: async (_: any, { assetTag, URL, gameId }: IAddAsset) => {
+  addAsset: async (
+    _: any,
+    { assetTag, URL, gameId }: IAddAsset,
+    context: ExpressContext
+  ) => {
+    minRole(context, "admin");
+
     const game = await Game.findByIdAndUpdate(
       Types.ObjectId(gameId),
       {
@@ -39,8 +54,11 @@ export const gameMutations = {
 
   toggleAssetState: async (
     _: any,
-    { gameId, assetId, state }: IToggleAssetState
+    { gameId, assetId, state }: IToggleAssetState,
+    context: ExpressContext
   ) => {
+    minRole(context, "admin");
+
     const game = await Game.findOneAndUpdate(
       {
         _id: Types.ObjectId(gameId),
