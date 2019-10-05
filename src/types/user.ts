@@ -1,4 +1,4 @@
-import { Schema, Document } from "mongoose";
+import { Document } from "mongoose";
 
 import { IGame } from "./game";
 
@@ -31,3 +31,10 @@ export interface IUser extends IRegisterUser, Document {
   resetPasswordToken?: string;
   resetTokenExpires?: string;
 }
+
+export type TRoles = "admin" | "user";
+
+export const ROLE_VALUES: { [key in TRoles]: number } = {
+  user: 0,
+  admin: 1
+};

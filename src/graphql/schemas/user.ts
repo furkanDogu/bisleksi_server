@@ -4,7 +4,7 @@ import { gql } from "apollo-server";
 
 export const User = gql`
   type GameInfo {
-    game_id: ID!
+    gameId: ID!
     score: Int!
   }
 

@@ -10,8 +10,8 @@ initMongo();
 const server = new ApolloServer({
   schema,
   playground: Boolean(env.has_playground),
-  context: request => ({
-    ...request
+  context: context => ({
+    ...context
   })
 });
 

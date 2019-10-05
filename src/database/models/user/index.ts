@@ -50,10 +50,11 @@ const userSchema = new mongoose.Schema({
   },
   gameInfo: [
     new Schema({
-      game_id: { type: Schema.Types.ObjectId, ref: "Game", required: true },
+      gameId: { type: Schema.Types.ObjectId, ref: "Game", required: true },
       score: { type: Number, required: true }
     })
   ],
+  role: { type: String, default: "user" },
   createdAt: {
     type: Date,
     default: Date.now
