@@ -28,8 +28,10 @@ export const userMutations = {
         msg: "Given email already exists"
       });
 
-    // TODO: initialize game levels
-    const games = await Game.find({}).select("_id");
+    const gameInfo = (await Game.find({}).select("_id")).map(game => ({
+      game_id: game._id,
+      score: 0
+    }));
 
     const user = (await User.create({
       name,
@@ -37,7 +39,8 @@ export const userMutations = {
       email,
       password,
       profileName,
-      birthday
+      birthday,
+      gameInfo
     })).toObject();
 
     _unset(user, "password");

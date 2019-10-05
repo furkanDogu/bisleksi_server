@@ -6,10 +6,6 @@ import {
   TResolverKind
 } from "@appTypes/common";
 
-export const generateLevels = (gameIds: [Schema.Types.ObjectId]) => {
-  return gameIds.map(gameId => ({ gameId, level: 1 }));
-};
-
 export const generateComposedResolverObj = (
   kind: TResolverKind,
   resolvers: { [key in string]: TResolverObject }

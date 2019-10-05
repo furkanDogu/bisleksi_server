@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
   },
   gameInfo: [
     new Schema({
-      game: { type: Schema.Types.ObjectId, ref: "Game", required: true },
+      game_id: { type: Schema.Types.ObjectId, ref: "Game", required: true },
       score: { type: Number, required: true }
     })
   ],
