@@ -26,7 +26,7 @@ export interface IUpdatePassword {
 }
 
 export interface IUser extends IRegisterUser, Document {
-  gameInfo: { game: IGame["_id"]; score: number }[];
+  gameInfo: { gameId: IGame["_id"]; scores: number[] }[];
   createdAt: Date;
   resetPasswordToken?: string;
   resetTokenExpires?: string;

@@ -4,6 +4,7 @@ export const Analysis = gql`
   input AnalysisInput {
     userId: String!
     gameId: String!
+    level: Int!
     duration: Float!
     wrongCount: Int!
     correctCount: Int!
@@ -20,6 +21,6 @@ export const Analysis = gql`
   }
 
   extend type Mutation {
-    createAnalysis(data: AnalysisInput!): Analysis
+    createAnalysis(data: AnalysisInput!): GameInfo
   }
 `;

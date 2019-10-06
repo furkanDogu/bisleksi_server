@@ -30,17 +30,17 @@ export const userMutations = {
 
     const gameInfo = (await Game.find({}).select("_id")).map(game => ({
       gameId: game._id,
-      score: 0
+      scores: [0]
     }));
 
     const user = (await User.create({
       name,
       surname,
       email,
-      password,
       profileName,
       birthday,
-      gameInfo
+      gameInfo,
+      password: await bcrypt.hash(password, 11)
     })).toObject();
 
     _unset(user, "password");
