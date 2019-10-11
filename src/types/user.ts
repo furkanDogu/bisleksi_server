@@ -15,9 +15,7 @@ export interface ILoginUser {
   email: IUser["email"];
   password: IUser["password"];
 }
-export interface INewAccessToken {
-  refreshToken: string;
-}
+
 export interface IValidateResetCode {
   code: string;
 }
@@ -32,7 +30,7 @@ export interface IUser extends IRegisterUser, Document {
   createdAt: Date;
   resetPasswordToken?: string;
   resetTokenExpires?: string;
-  refreshToken?: string;
+  refresh_token?: string;
   role: string;
 }
 

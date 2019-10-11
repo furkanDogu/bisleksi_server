@@ -1,9 +1,9 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
 export const Auth = gql`
   type AuthPayload {
-    accessToken: String!
-    refreshToken: String!
+    access_token: String!
+    refresh_token: String!
   }
 
   extend type Mutation {
@@ -16,7 +16,6 @@ export const Auth = gql`
       birthday: String!
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
-    newAccessToken(refreshToken: String!): String
     logout(userId: String!): Boolean
   }
 `;

@@ -4,8 +4,8 @@ import env from "@appConfig";
 
 import { error } from "@services/errorService";
 
-export default () => {
-  mongoose.connect(env.mongo_url, {
+export default async () => {
+  await mongoose.connect(env.mongo_url, {
     useNewUrlParser: true
   });
   mongoose.connection.on("open", () => {

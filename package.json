@@ -37,7 +37,7 @@
     "@types/mongoose": "^5.5.9",
     "@types/nodemailer": "^6.2.1",
     "@types/yup": "^0.26.22",
-    "apollo-server": "^2.7.0",
+    "apollo-server-express": "^2.9.6",
     "bcrypt": "^3.0.6",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",

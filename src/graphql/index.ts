@@ -1,5 +1,5 @@
 import { makeExecutableSchema, IResolvers } from "graphql-tools";
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
 // TYPES
 import { User, Game, Analysis, Auth } from "@schemas";

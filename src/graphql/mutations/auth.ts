@@ -1,18 +1,13 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
+import { verify } from "jsonwebtoken";
+import { Router } from "express";
 
-import {
-  IRegisterUser,
-  ILoginUser,
-  INewAccessToken,
-  TTokenPayload
-} from "@appTypes/user";
+import { IRegisterUser, ILoginUser, TTokenPayload } from "@appTypes/user";
 import { User, Game } from "@models";
 
 import env from "@appConfig";
 import { error } from "@services/errorService";
-import { createToken, minRole } from "@services/authService";
+import { createToken } from "@services/authService";
 
 export const authMutations = {
   register: async (
@@ -41,17 +36,17 @@ export const authMutations = {
       password: await bcrypt.hash(password, 11)
     });
 
-    const refreshToken = createToken({ userId: _id }, env.refreshTokenExp);
+    const refresh_token = createToken({ userId: _id }, env.refreshTokenExp);
     await User.findOneAndUpdate(
       { _id },
       {
-        refreshToken
+        refresh_token
       }
     );
 
     return {
-      refreshToken,
-      accessToken: createToken({ userId: _id, role }, env.accessTokenExp)
+      refresh_token,
+      access_token: createToken({ userId: _id, role }, env.accessTokenExp)
     };
   },
 
@@ -71,51 +66,19 @@ export const authMutations = {
 
     const userId = user._id;
 
-    const refreshToken = createToken({ userId }, env.refreshTokenExp);
-    user.set("refreshToken", refreshToken);
+    const refresh_token = createToken({ userId }, env.refreshTokenExp);
+    user.set("refresh_token", refresh_token);
     await user.save();
 
     return {
-      refreshToken,
-      accessToken: createToken({ userId, role: user.role }, env.accessTokenExp)
+      refresh_token,
+      access_token: createToken({ userId, role: user.role }, env.accessTokenExp)
     };
   },
-  newAccessToken: async (_: any, { refreshToken }: INewAccessToken) => {
-    let userId;
-    jwt.verify(refreshToken, env.jwt_secret, (err, decoded) => {
-      if (err) {
-        return error({
-          from: "mutations:auth:newAccessToken",
-          msg: "Invalid refresh token"
-        });
-      }
-      userId = (<TTokenPayload>decoded).userId;
-    });
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return error({
-        from: "mutations:auth:newAccessToken",
-        msg: "Invalid refresh token"
-      });
-    }
-    if (user.refreshToken !== refreshToken) {
-      return error({
-        from: "mutations:auth:newAccessToken",
-        msg: "Invalid refresh token"
-      });
-    }
-    return createToken(
-      {
-        userId,
-        role: user.role
-      },
-      env.accessTokenExp
-    );
-  },
   logout: async (_: any, { userId }: { userId: string }) => {
     const user = await User.findByIdAndUpdate(userId, {
-      refreshToken: null
+      refresh_token: null
     });
 
     if (!user)
@@ -127,3 +90,40 @@ export const authMutations = {
     return true;
   }
 };
+
+const router = Router();
+router.get("/newAccessToken", async (req, res) => {
+  const refresh_token = req.headers["refresh_token"];
+
+  if (!refresh_token) return res.status(401).send({ access_token: "" });
+
+  let decodedRefreshToken;
+  try {
+    decodedRefreshToken = verify(<string>refresh_token, env.jwt_secret);
+  } catch (e) {
+    return res.status(401).send({ access_token: "" });
+  }
+
+  const user = await User.findById((<TTokenPayload>decodedRefreshToken).userId);
+  if (!user) {
+    console.log(<TTokenPayload>decodedRefreshToken);
+    console.log("here 1");
+    return res.status(401).send({ access_token: "" });
+  }
+  if (user.refresh_token !== refresh_token) {
+    console.log("here 2");
+    return res.status(401).send({ access_token: "" });
+  }
+
+  return res.status(200).send({
+    access_token: createToken(
+      {
+        userId: user._id,
+        role: user.role
+      },
+      env.accessTokenExp
+    )
+  });
+});
+
+export default router;
