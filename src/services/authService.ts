@@ -2,31 +2,36 @@ import jwt from "jsonwebtoken";
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 
 import { error } from "@services/errorService";
-import { ROLE_VALUES, TRoles } from "@appTypes/user";
+import { ROLE_VALUES, TRoles, TTokenPayload } from "@appTypes/user";
 
 import env from "@appConfig";
 
-type TToken = {
-  role: TRoles;
-};
-
 // checks if the user authenticated. If invalid token is given, it will throw error while verifying.
 export const minRole = ({ req }: ExpressContext, minRole: TRoles) => {
-  const auth_token = req.get("auth_token");
+  const accessToken = req.get("accessToken");
   const errObj = {
     from: "services:authService:auth",
     msg: "Access denied"
   };
 
-  if (!auth_token) {
+  if (!accessToken) {
     return error(errObj);
   }
-  jwt.verify(auth_token, env.jwt_secret, (e, decoded) => {
+  let decodedToken;
+  jwt.verify(accessToken, env.jwt_secret, (e, decoded) => {
     if (
       e ||
-      !(<TToken>decoded).role ||
-      ROLE_VALUES[minRole] > ROLE_VALUES[(<TToken>decoded).role]
+      !(<TTokenPayload>decoded).role ||
+      ROLE_VALUES[minRole] > ROLE_VALUES[(<TTokenPayload>decoded).role]
     )
       return error(errObj);
+    decodedToken = decoded;
+  });
+  return decodedToken;
+};
+
+export const createToken = (info: any, exp: string) => {
+  return jwt.sign(info, env.jwt_secret, {
+    expiresIn: exp
   });
 };

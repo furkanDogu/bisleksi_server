@@ -1,7 +1,5 @@
 import { gql } from "apollo-server";
 
-// TODO: fix game level
-
 export const User = gql`
   type GameInfo {
     gameId: ID!
@@ -11,6 +9,7 @@ export const User = gql`
   type User {
     _id: ID!
     name: String!
+    role: String!
     surname: String!
     email: String!
     profileName: String!
@@ -22,19 +21,10 @@ export const User = gql`
   }
 
   extend type Query {
-    sayHi(name: String!): String!
+    user(userId: String!): User
   }
 
   extend type Mutation {
-    register(
-      name: String!
-      surname: String!
-      email: String!
-      password: String!
-      profileName: String!
-      birthday: String!
-    ): String
-    login(email: String!, password: String!): String
     sendResetEmail(email: String!): Boolean
     validateResetCode(code: String!): String
     updatePassword(safetyToken: String!, newPassword: String!): Boolean

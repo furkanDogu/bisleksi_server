@@ -3,72 +3,15 @@ import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import _unset from "lodash/unset";
 
-import {
-  IRegisterUser,
-  ILoginUser,
-  IUpdatePassword,
-  IUser,
-  IValidateResetCode
-} from "@appTypes/user";
-import { User, Game } from "@models";
+import { IUpdatePassword, IUser, IValidateResetCode } from "@appTypes/user";
+import { User } from "@models";
 import env from "@appConfig";
 
 import mailService from "@services/mailService";
 import { error } from "@services/errorService";
+import { createToken } from "@services/authService";
 
 export const userMutations = {
-  register: async (
-    _: IUser,
-    { name, surname, email, password, profileName, birthday }: IRegisterUser
-  ) => {
-    const anyUser = await User.findOne({ email });
-    if (anyUser)
-      return error({
-        from: "mutations:user:register",
-        msg: "Given email already exists"
-      });
-
-    const gameInfo = (await Game.find({}).select("_id")).map(game => ({
-      gameId: game._id,
-      scores: [0]
-    }));
-
-    const user = (await User.create({
-      name,
-      surname,
-      email,
-      profileName,
-      birthday,
-      gameInfo,
-      password: await bcrypt.hash(password, 11)
-    })).toObject();
-
-    _unset(user, "password");
-
-    return jwt.sign(user, env.jwt_secret);
-  },
-
-  login: async (_: IUser, { email, password }: ILoginUser) => {
-    const userDoc = await User.findOne({ email });
-    if (!userDoc)
-      return error({
-        from: "mutations:user:login",
-        msg: "Email or password is incorrect "
-      });
-
-    const isValid = await bcrypt.compare(password, userDoc.password);
-    if (!isValid)
-      return error({
-        from: "mutations:user:login",
-        msg: "Email or password is incorrect "
-      });
-
-    const user = userDoc.toObject();
-    _unset(user, "password");
-
-    return jwt.sign(user, env.jwt_secret);
-  },
-
   sendResetEmail: async (_: IUser, { email }: { email: string }) => {
     const userDoc = await User.findOne({ email });
     if (!userDoc)
@@ -85,6 +28,7 @@ export const userMutations = {
     });
 
     await mailService.sendMail(userDoc.toObject(), code);
+
     return true;
   },
 
@@ -100,9 +44,7 @@ export const userMutations = {
         msg: "Given reset code is invalid"
       });
 
-    return jwt.sign({ email: userDoc.toObject().email }, env.jwt_secret, {
-      expiresIn: "1h"
-    });
+    return createToken({ email: userDoc.toObject().email }, "1h");
   },
 
   updatePassword: async (

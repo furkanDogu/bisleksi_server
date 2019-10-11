@@ -48,6 +48,7 @@ export const analysisMutations = {
         msg: "Game couldn't be found"
       });
     }
+    await Analysis.create(data);
 
     return user
       .toObject()

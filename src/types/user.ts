@@ -15,7 +15,9 @@ export interface ILoginUser {
   email: IUser["email"];
   password: IUser["password"];
 }
-
+export interface INewAccessToken {
+  refreshToken: string;
+}
 export interface IValidateResetCode {
   code: string;
 }
@@ -30,6 +32,8 @@ export interface IUser extends IRegisterUser, Document {
   createdAt: Date;
   resetPasswordToken?: string;
   resetTokenExpires?: string;
+  refreshToken?: string;
+  role: string;
 }
 
 export type TRoles = "admin" | "user";
@@ -37,4 +41,13 @@ export type TRoles = "admin" | "user";
 export const ROLE_VALUES: { [key in TRoles]: number } = {
   user: 0,
   admin: 1
+};
+
+export type TTokenPayload = {
+  role: TRoles;
+  userId: string;
+};
+
+export type TUserQuery = {
+  userId: string;
 };
