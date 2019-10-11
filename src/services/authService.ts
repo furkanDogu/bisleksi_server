@@ -12,7 +12,6 @@ export const minRole = (
   minRole: TRoles
 ): TTokenPayload => {
   const access_token = req.get("access_token");
-  console.log("triggered");
   if (!access_token) {
     throw new AuthenticationError("Auth error");
   }

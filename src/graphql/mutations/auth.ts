@@ -105,15 +105,10 @@ router.get("/newAccessToken", async (req, res) => {
   }
 
   const user = await User.findById((<TTokenPayload>decodedRefreshToken).userId);
-  if (!user) {
-    console.log(<TTokenPayload>decodedRefreshToken);
-    console.log("here 1");
+  if (!user) return res.status(401).send({ access_token: "" });
+
+  if (user.refresh_token !== refresh_token)
     return res.status(401).send({ access_token: "" });
-  }
-  if (user.refresh_token !== refresh_token) {
-    console.log("here 2");
-    return res.status(401).send({ access_token: "" });
-  }
 
   return res.status(200).send({
     access_token: createToken(
