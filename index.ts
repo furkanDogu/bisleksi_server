@@ -1,6 +1,7 @@
 import "module-alias/register";
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
+import cors from "cors";
 
 import env from "./src/appConfig";
 import schema from "./src/graphql";
@@ -9,6 +10,8 @@ import initMongo from "./src/database/mongoDB";
 
 (async () => {
   const app = express();
+
+  app.use(cors());
 
   await initMongo();
   const apolloServer = new ApolloServer({
