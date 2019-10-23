@@ -12,7 +12,6 @@ export const User = gql`
     role: String!
     surname: String!
     email: String!
-    profileName: String!
     birthday: String!
     gameInfo: [GameInfo!]!
     createdAt: String!

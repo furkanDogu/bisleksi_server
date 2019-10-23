@@ -12,7 +12,6 @@ export const Auth = gql`
       surname: String!
       email: String!
       password: String!
-      profileName: String!
       birthday: String!
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!

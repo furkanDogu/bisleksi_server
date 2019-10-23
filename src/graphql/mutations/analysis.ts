@@ -16,9 +16,14 @@ export const analysisMutations = {
   ) => {
     minRole(context, "user");
 
-    const { correctCount, userId, gameId, level, wrongCount } = data;
+    let { correctCount, userId, gameId, level, wrongCount } = data;
+    level -= 1;
 
-    if (level > env.max_level || correctCount + wrongCount > env.questionCount)
+    if (
+      level < 0 ||
+      level > env.max_level ||
+      correctCount + wrongCount > env.questionCount
+    )
       return error({
         from: "mutations:analysis:createAnalysis",
         msg: "Invalid game analysis"
@@ -31,16 +36,17 @@ export const analysisMutations = {
         msg: "User couldn't be found"
       });
 
+    let updatedGameInfo;
     try {
-      const test = user.toObject().gameInfo.map((game: any) =>
-        game.gameId.toString() === gameId
+      updatedGameInfo = user.toObject().gameInfo.map((game: any) => {
+        return game.gameId.toString() === gameId
           ? {
               ...game,
               scores: scoreHandler(game.scores, correctCount * 10, level)
             }
-          : { ...game }
-      );
-      user.gameInfo = test;
+          : { ...game };
+      });
+      user.gameInfo = updatedGameInfo;
       await user.save();
     } catch (e) {
       return error({
@@ -50,8 +56,8 @@ export const analysisMutations = {
     }
     await Analysis.create(data);
 
-    return user
-      .toObject()
-      .gameInfo.find((game: any) => game.gameId.toString() === gameId);
+    return updatedGameInfo.find(
+      (game: any) => game.gameId.toString() === gameId
+    );
   }
 };

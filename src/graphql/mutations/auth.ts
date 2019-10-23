@@ -12,7 +12,7 @@ import { createToken } from "@services/authService";
 export const authMutations = {
   register: async (
     _: any,
-    { name, surname, email, password, profileName, birthday }: IRegisterUser
+    { name, surname, email, password, birthday }: IRegisterUser
   ) => {
     const anyUser = await User.findOne({ email });
     if (anyUser)
@@ -30,11 +30,11 @@ export const authMutations = {
       name,
       surname,
       email,
-      profileName,
       birthday,
       gameInfo,
       password: await bcrypt.hash(password, 11)
     });
+    console.log(_id);
 
     const refresh_token = createToken({ userId: _id }, env.refreshTokenExp);
     await User.findOneAndUpdate(

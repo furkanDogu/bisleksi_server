@@ -12,7 +12,7 @@ export default {
     const mailOptions = {
       from: auth.user,
       to: user.email,
-      subject: `${user.profileName} - Bisleksi Şifre Yenileme Talebi`,
+      subject: `${user.name} - Bisleksi Şifre Yenileme Talebi`,
       html: `<html>
 <head>
 </head>

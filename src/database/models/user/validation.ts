@@ -1,15 +1,19 @@
 import * as yup from "yup";
 
+import ageCalculator from "@utils/ageCalculator";
+
 export const isEmailValid = async (email: string) =>
   yup
     .string()
     .email()
     .isValid(email);
 
-// ex: In 2019, the given birthday max should be 01.01.2012
-const maxYear = new Date().getFullYear() - 7;
 export const isBirthDayValid = async (birthday: Date | string) =>
   yup
     .date()
-    .max(new Date(maxYear, 0, 1))
+    .test(
+      "is-over-7",
+      "Min age should be 7",
+      (birthday: string) => ageCalculator(birthday as string) >= 7
+    )
     .isValid(birthday);
